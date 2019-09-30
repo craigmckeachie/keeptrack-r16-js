@@ -5,17 +5,38 @@ import ProjectCard from './ProjectCard';
 import ProjectForm from './ProjectForm';
 
 class ProjectList extends React.Component {
+  state = {
+    editingProject: {}
+  };
   handleEdit = project => {
-    console.log(project);
+    this.setState({ editingProject: project });
   };
   render() {
     const { projects } = this.props;
-    const items = projects.map(project => (
-      <div key={project.id} className="cols-sm">
-        <ProjectCard project={project} onEdit={this.handleEdit} />
-        <ProjectForm />
-      </div>
-    ));
+    
+    let item;
+    const items = projects.map((project) => {
+      if (project !== this.state.editingProject) {
+        item = (
+          <div key={project.id} className="cols-sm">
+            <ProjectCard
+              project={project}
+              onEdit={() => {
+                this.handleEdit(project);
+              }}
+            ></ProjectCard>
+          </div>
+        );
+      } else {
+        item = (
+          <div key={project.id} className="cols-sm">
+            <ProjectForm></ProjectForm>
+          </div>
+        );
+      }
+      return item;
+    });
+
     return <div className="row">{items}</div>;
   }
 }
