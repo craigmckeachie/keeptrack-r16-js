@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Project } from './Project';
 
 class ProjectForm extends React.Component {
+  handleSubmit = event => {
+    event.preventDefault();
+    this.props.onSave(new Project({ name: 'Updated Project' }));
+  };
   render() {
     const { onCancel } = this.props;
     return (
-      <form className="input-group vertical">
+      <form className="input-group vertical" onSubmit={this.handleSubmit}>
         <label htmlFor="name">Project Name</label>
         <input type="text" name="name" placeholder="enter name" />
         <label htmlFor="description">Project Description</label>
@@ -27,6 +32,7 @@ class ProjectForm extends React.Component {
 }
 
 ProjectForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired
 };
 

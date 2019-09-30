@@ -15,7 +15,7 @@ class ProjectList extends React.Component {
     this.setState({ editingProject: {} });
   };
   render() {
-    const { projects } = this.props;
+    const { projects, onSave } = this.props;
 
     let item;
     const items = projects.map(project => {
@@ -33,7 +33,10 @@ class ProjectList extends React.Component {
       } else {
         item = (
           <div key={project.id} className="cols-sm">
-            <ProjectForm onCancel={this.cancelEditing}></ProjectForm>
+            <ProjectForm
+              onCancel={this.cancelEditing}
+              onSave={onSave}
+            ></ProjectForm>
           </div>
         );
       }
@@ -45,7 +48,8 @@ class ProjectList extends React.Component {
 }
 
 ProjectList.propTypes = {
-  projects: PropTypes.arrayOf(PropTypes.instanceOf(Project)).isRequired
+  projects: PropTypes.arrayOf(PropTypes.instanceOf(Project)).isRequired,
+  onSave: PropTypes.func.isRequired
 };
 
 export default ProjectList;
