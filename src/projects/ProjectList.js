@@ -5,11 +5,14 @@ import ProjectCard from './ProjectCard';
 import ProjectForm from './ProjectForm';
 
 class ProjectList extends React.Component {
+  handleEdit = project => {
+    console.log(project);
+  };
   render() {
     const { projects } = this.props;
     const items = projects.map(project => (
       <div key={project.id} className="cols-sm">
-        <ProjectCard project={project} />
+        <ProjectCard project={project} onEdit={this.handleEdit} />
         <ProjectForm />
       </div>
     ));
