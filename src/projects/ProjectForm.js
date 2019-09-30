@@ -1,7 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class ProjectForm extends React.Component {
   render() {
+    const { onCancel } = this.props;
     return (
       <form className="input-group vertical">
         <label htmlFor="name">Project Name</label>
@@ -15,7 +17,7 @@ class ProjectForm extends React.Component {
         <div className="input-group">
           <button className="primary bordered medium">Save</button>
           <span />
-          <button type="button" className="bordered medium">
+          <button type="button" className="bordered medium" onClick={onCancel}>
             cancel
           </button>
         </div>
@@ -23,5 +25,9 @@ class ProjectForm extends React.Component {
     );
   }
 }
+
+ProjectForm.propTypes = {
+  onCancel: PropTypes.func.isRequired
+};
 
 export default ProjectForm;

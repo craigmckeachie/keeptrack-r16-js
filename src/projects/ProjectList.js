@@ -11,11 +11,14 @@ class ProjectList extends React.Component {
   handleEdit = project => {
     this.setState({ editingProject: project });
   };
+  cancelEditing = () => {
+    this.setState({ editingProject: {} });
+  };
   render() {
     const { projects } = this.props;
-    
+
     let item;
-    const items = projects.map((project) => {
+    const items = projects.map(project => {
       if (project !== this.state.editingProject) {
         item = (
           <div key={project.id} className="cols-sm">
@@ -30,7 +33,7 @@ class ProjectList extends React.Component {
       } else {
         item = (
           <div key={project.id} className="cols-sm">
-            <ProjectForm></ProjectForm>
+            <ProjectForm onCancel={this.cancelEditing}></ProjectForm>
           </div>
         );
       }
