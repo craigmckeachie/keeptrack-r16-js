@@ -4,7 +4,32 @@ import { Project } from './Project';
 
 class ProjectForm extends React.Component {
   state = {
-    project: this.props.project
+    project: this.props.project,
+    errors: { name: '', description: '', budget: '' }
+  };
+  validate = project => {
+    let errors = { name: '', description: '', budget: '' };
+    if (project.name.length === 0) {
+      errors.name = 'Name is required';
+    }
+    if (project.name.length > 0 && project.name.length < 3) {
+      errors.name = 'Name needs to be at least 3 characters.';
+    }
+    if (project.description.length === 0) {
+      errors.description = 'Description is required.';
+    }
+    if (project.budget === 0) {
+      errors.budget = 'Budget must be more than $0.';
+    }
+    return errors;
+  };
+  isValid = () => {
+    const { errors } = this.state;
+    return (
+      errors.name.length === 0 &&
+      errors.description.length === 0 &&
+      errors.budget.length === 0
+    );
   };
   handleChange = event => {
     const { type, name, value, checked } = event.target;
@@ -23,11 +48,13 @@ class ProjectForm extends React.Component {
         previousState.project,
         updatedProject
       );
-      return { project };
+      const errors = this.validate(project);
+      return { project, errors };
     });
   };
   handleSubmit = event => {
     event.preventDefault();
+    if (!this.isValid()) return;
     this.props.onSave(this.state.project);
   };
   render() {
@@ -42,6 +69,11 @@ class ProjectForm extends React.Component {
           value={this.state.project.name}
           onChange={this.handleChange}
         />
+        {this.state.errors.name.length > 0 && (
+          <div className="card error">
+            <p>{this.state.errors.name}</p>
+          </div>
+        )}
         <label htmlFor="description">Project Description</label>
         <textarea
           name="description"
@@ -49,6 +81,11 @@ class ProjectForm extends React.Component {
           value={this.state.project.description}
           onChange={this.handleChange}
         />
+        {this.state.errors.description.length > 0 && (
+          <div className="card error">
+            <p>{this.state.errors.description}</p>
+          </div>
+        )}
         <label htmlFor="budget">Project Budget</label>
         <input
           type="number"
@@ -57,6 +94,11 @@ class ProjectForm extends React.Component {
           value={this.state.project.budget}
           onChange={this.handleChange}
         />
+        {this.state.errors.budget.length > 0 && (
+          <div className="card error">
+            <p>{this.state.errors.budget}</p>
+          </div>
+        )}
         <label htmlFor="isActive">Active?</label>
         <input
           type="checkbox"
@@ -78,6 +120,7 @@ class ProjectForm extends React.Component {
 
 ProjectForm.propTypes = {
   project: PropTypes.instanceOf(Project),
+  errors: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired
 };
