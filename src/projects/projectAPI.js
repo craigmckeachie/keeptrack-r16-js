@@ -66,6 +66,13 @@ const projectAPI = {
     );
   },
 
+  find(id) {
+    return fetch(`${url}/${id}`)
+      .then(checkStatus)
+      .then(parseJSON)
+      .then(toProject);
+  },
+
   put(project) {
     return fetch(`${url}/${project.id}`, {
       method: 'PUT',
