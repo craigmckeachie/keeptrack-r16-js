@@ -40,12 +40,19 @@ class ProjectsPage extends React.Component {
     this.loadProjects(nextPage);
   };
   saveProject = project => {
-    this.setState(previousState => {
-      let projects = previousState.projects.map(p => {
-        return p.id === project.id ? Object.assign({}, p, project) : p;
+    projectAPI
+      .put(project)
+      .then(data => {
+        this.setState(state => {
+          let projects = state.projects.map(p => {
+            return p.id === project.id ? project : p;
+          });
+          return { projects };
+        });
+      })
+      .catch(error => {
+        this.setState({ error: error.message });
       });
-      return { projects };
-    });
   };
   render() {
     return (

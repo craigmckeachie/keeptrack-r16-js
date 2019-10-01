@@ -38,6 +38,10 @@ function toProjects(array) {
   return array.map(object => new Project(object));
 }
 
+function toProject(object) {
+  return new Project(object);
+}
+
 // eslint-disable-next-line
 function delay(ms) {
   return function(x) {
@@ -60,6 +64,25 @@ const projectAPI = {
           );
         })
     );
+  },
+
+  put(project) {
+    return fetch(`${url}/${project.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(project),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(checkStatus)
+      .then(parseJSON)
+      .then(toProject)
+      .catch(error => {
+        console.log('log client error ' + error);
+        throw new Error(
+          'There was an error updating the project. Please try again.'
+        );
+      });
   }
 };
 
