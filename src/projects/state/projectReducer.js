@@ -8,7 +8,7 @@ import {
   SAVE_PROJECT_REQUEST,
   SAVE_PROJECT_SUCCESS,
   SAVE_PROJECT_FAILURE
-} from './projectTypes';
+} from './projectActions';
 
 export const initialProjectState = {
   projects: [],
