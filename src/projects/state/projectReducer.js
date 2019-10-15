@@ -9,6 +9,7 @@ import {
   SAVE_PROJECT_SUCCESS,
   SAVE_PROJECT_FAILURE
 } from './projectActions';
+import { Project } from '../Project';
 
 export const initialProjectState = {
   projects: [],
@@ -51,7 +52,7 @@ export function projectReducer(state = initialProjectState, action) {
           ...state,
           projects: state.projects.map(project => {
             return project.id === action.payload.id
-              ? Object.assign({}, project, action.payload)
+              ? Object.assign(new Project(), project, action.payload)
               : project;
           })
         };

@@ -1,81 +1,46 @@
 import React, { Fragment } from 'react';
-
 import ProjectList from './ProjectList';
-import { projectAPI } from './projectAPI';
+import { loadProjects, saveProject } from './state/projectActions';
+import { connect } from 'react-redux';
 
 class ProjectsPage extends React.Component {
-  state = {
-    projects: [],
-    loading: false,
-    error: undefined,
-    page: 1
-  };
-
   loadProjects(page) {
-    this.setState({ loading: true });
-    projectAPI
-      .get(page)
-      .then(data => {
-        if (page === 1) {
-          this.setState({ projects: data, loading: false, page });
-        } else {
-          this.setState(previousState => {
-            return {
-              projects: [...previousState.projects, ...data],
-              loading: false,
-              page
-            };
-          });
-        }
-      })
-      .catch(error => this.setState({ error: error.message, loading: false }));
+    this.props.onLoad(page);
   }
 
   componentDidMount() {
-    this.loadProjects(this.state.page);
+    this.loadProjects(this.props.page);
   }
 
   handleMoreClick = () => {
-    const nextPage = this.state.page + 1;
+    const nextPage = this.props.page + 1;
     this.loadProjects(nextPage);
   };
   saveProject = project => {
-    projectAPI
-      .put(project)
-      .then(data => {
-        this.setState(state => {
-          let projects = state.projects.map(p => {
-            return p.id === project.id ? project : p;
-          });
-          return { projects };
-        });
-      })
-      .catch(error => {
-        this.setState({ error: error.message });
-      });
+    this.props.onSave(project);
   };
   render() {
     return (
       <Fragment>
         <h1>Projects</h1>
-        {this.state.error && (
+        {this.props.error && (
           <div className="row">
             <div className="card large error">
               <section>
                 <p>
                   <span className="icon-alert inverse "></span>
-                  {this.state.error}
+                  {this.props.error}
                 </p>
               </section>
             </div>
           </div>
         )}
         <ProjectList
-          projects={this.state.projects}
+          projects={this.props.projects}
           onSave={this.saveProject}
         ></ProjectList>
 
-        {!this.state.loading && !this.state.error && (
+        {!this.props.loading && !this.props.error && (
           <div className="row">
             <div className="col-sm-12">
               <div className="button-group fluid">
@@ -90,7 +55,7 @@ class ProjectsPage extends React.Component {
           </div>
         )}
 
-        {this.state.loading && (
+        {this.props.loading && (
           <div className="center-page">
             <span className="spinner primary"></span>
             <p>Loading...</p>
@@ -101,4 +66,21 @@ class ProjectsPage extends React.Component {
   }
 }
 
-export default ProjectsPage;
+// export default ProjectsPage;
+
+// React Redux (connect)---------------
+function mapStateToProps(state) {
+  return {
+    ...state.projectState
+  };
+}
+
+const mapDispatchToProps = {
+  onLoad: loadProjects,
+  onSave: saveProject
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectsPage);
