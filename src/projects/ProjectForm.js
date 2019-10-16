@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Project } from './Project';
+import { saveProject } from './state/projectActions';
+import { connect } from 'react-redux';
 
 class ProjectForm extends React.Component {
   state = {
@@ -125,4 +127,13 @@ ProjectForm.propTypes = {
   onCancel: PropTypes.func.isRequired
 };
 
-export default ProjectForm;
+// export default ProjectForm;
+
+const mapDispatchToProps = {
+  onSave: saveProject
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ProjectForm);

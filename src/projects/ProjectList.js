@@ -15,7 +15,7 @@ class ProjectList extends React.Component {
     this.setState({ editingProject: {} });
   };
   render() {
-    const { projects, onSave } = this.props;
+    const { projects } = this.props;
 
     let item;
     const items = projects.map(project => {
@@ -36,7 +36,6 @@ class ProjectList extends React.Component {
             <ProjectForm
               project={project}
               onCancel={this.cancelEditing}
-              onSave={onSave}
             ></ProjectForm>
           </div>
         );
