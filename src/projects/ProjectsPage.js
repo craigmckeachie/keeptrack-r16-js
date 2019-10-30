@@ -67,6 +67,7 @@ class ProjectsPage extends React.Component {
 }
 
 // export default ProjectsPage;
+export { ProjectsPage as UnconnectedProjectsPage };
 
 // React Redux (connect)---------------
 function mapStateToProps(state) {
