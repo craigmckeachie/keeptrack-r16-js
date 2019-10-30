@@ -128,6 +128,7 @@ ProjectForm.propTypes = {
 };
 
 // export default ProjectForm;
+export { ProjectForm as UnconnectedProjectForm };
 
 const mapDispatchToProps = {
   onSave: saveProject
