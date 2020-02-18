@@ -9,7 +9,7 @@ class ProjectsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.loadProjects(this.props.page);
+    this.loadProjects(1);
   }
 
   handleMoreClick = () => {
@@ -80,7 +80,4 @@ const mapDispatchToProps = {
   onSave: saveProject
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProjectsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectsPage);
