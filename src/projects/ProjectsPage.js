@@ -2,21 +2,17 @@ import React, { Fragment } from 'react';
 import { MOCK_PROJECTS } from './MockProjects';
 import ProjectList from './ProjectList';
 
-class ProjectsPage extends React.Component {
-  saveProject = project => {
+function ProjectsPage() {
+  const saveProject = (project) => {
     console.log('Saving project: ', project);
   };
-  render() {
-    return (
-      <Fragment>
-        <h1>Projects</h1>
-        <ProjectList
-          projects={MOCK_PROJECTS}
-          onSave={this.saveProject}
-        ></ProjectList>
-      </Fragment>
-    );
-  }
+
+  return (
+    <Fragment>
+      <h1>Projects</h1>
+      <ProjectList onSave={saveProject} projects={MOCK_PROJECTS} />
+    </Fragment>
+  );
 }
 
 export default ProjectsPage;
