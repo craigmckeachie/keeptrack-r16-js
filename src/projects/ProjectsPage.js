@@ -1,104 +1,86 @@
-import React, { Fragment } from 'react';
-
+import React, { Fragment, useState, useEffect } from 'react';
 import ProjectList from './ProjectList';
 import { projectAPI } from './projectAPI';
 
-class ProjectsPage extends React.Component {
-  state = {
-    projects: [],
-    loading: false,
-    error: undefined,
-    page: 1
-  };
+function ProjectsPage() {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(undefined);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  loadProjects(page) {
-    this.setState({ loading: true });
+  useEffect(() => {
+    setLoading(true);
     projectAPI
-      .get(page)
-      .then(data => {
-        if (page === 1) {
-          this.setState({ projects: data, loading: false, page });
+      .get(currentPage)
+      .then((data) => {
+        setLoading(false);
+        if (currentPage === 1) {
+          setProjects(data);
         } else {
-          this.setState(previousState => {
-            return {
-              projects: [...previousState.projects, ...data],
-              loading: false,
-              page
-            };
-          });
+          setProjects((projects) => [...projects, ...data]);
         }
       })
-      .catch(error => this.setState({ error: error.message, loading: false }));
-  }
+      .catch((e) => {
+        setLoading(false);
+        setError(e.message);
+      });
+  }, [currentPage]);
 
-  componentDidMount() {
-    this.loadProjects(this.state.page);
-  }
-
-  handleMoreClick = () => {
-    const nextPage = this.state.page + 1;
-    this.loadProjects(nextPage);
+  const handleMoreClick = () => {
+    setCurrentPage((currentPage) => currentPage + 1);
   };
-  saveProject = project => {
+
+  const saveProject = (project) => {
     projectAPI
       .put(project)
-      .then(data => {
-        this.setState(state => {
-          let projects = state.projects.map(p => {
-            return p.id === project.id ? project : p;
-          });
-          return { projects };
+      .then((updatedProject) => {
+        let updatedProjects = projects.map((p) => {
+          return p.id === project.id ? project : p;
         });
+        setProjects(updatedProjects);
       })
-      .catch(error => {
-        this.setState({ error: error.message });
+      .catch((e) => {
+        setError(e.message);
       });
   };
-  render() {
-    return (
-      <Fragment>
-        <h1>Projects</h1>
-        {this.state.error && (
-          <div className="row">
-            <div className="card large error">
-              <section>
-                <p>
-                  <span className="icon-alert inverse "></span>
-                  {this.state.error}
-                </p>
-              </section>
+
+  return (
+    <Fragment>
+      <h1>Projects</h1>
+      {error && (
+        <div className="row">
+          <div className="card large error">
+            <section>
+              <p>
+                <span className="icon-alert inverse "></span>
+                {error}
+              </p>
+            </section>
+          </div>
+        </div>
+      )}
+      <ProjectList onSave={saveProject} projects={projects} />
+
+      {!loading && !error && (
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="button-group fluid">
+              <button className="button default" onClick={handleMoreClick}>
+                More...
+              </button>
             </div>
           </div>
-        )}
-        <ProjectList
-          projects={this.state.projects}
-          onSave={this.saveProject}
-        ></ProjectList>
+        </div>
+      )}
 
-        {!this.state.loading && !this.state.error && (
-          <div className="row">
-            <div className="col-sm-12">
-              <div className="button-group fluid">
-                <button
-                  className="button default"
-                  onClick={this.handleMoreClick}
-                >
-                  More...
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {this.state.loading && (
-          <div className="center-page">
-            <span className="spinner primary"></span>
-            <p>Loading...</p>
-          </div>
-        )}
-      </Fragment>
-    );
-  }
+      {loading && (
+        <div className="center-page">
+          <span className="spinner primary"></span>
+          <p>Loading...</p>
+        </div>
+      )}
+    </Fragment>
+  );
 }
 
 export default ProjectsPage;
