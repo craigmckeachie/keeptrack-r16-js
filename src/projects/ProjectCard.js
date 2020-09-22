@@ -3,9 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+function formatDescription(description) {
+  return description.substring(0, 60) + '...';
+}
+
 function ProjectCard(props) {
   const { project, onEdit } = props;
-  const handleEditClick = projectBeingEdited => {
+  const handleEditClick = (projectBeingEdited) => {
     onEdit(projectBeingEdited);
   };
   return (
@@ -16,7 +20,7 @@ function ProjectCard(props) {
           <h5 className="strong">
             <strong>{project.name}</strong>
           </h5>
-          <p>{project.description}</p>
+          <p>{formatDescription(project.description)}</p>
           <p>Budget : {project.budget.toLocaleString()}</p>
         </Link>
         <button
@@ -35,7 +39,7 @@ function ProjectCard(props) {
 
 ProjectCard.propTypes = {
   project: PropTypes.instanceOf(Project).isRequired,
-  onEdit: PropTypes.func.isRequired
+  onEdit: PropTypes.func.isRequired,
 };
 
 export default ProjectCard;
